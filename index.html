@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Profit and Loss Exam</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+
+      #start-container,
+      #exam-container,
+      #result-container {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 80%;
+        max-width: 600px;
+        text-align: center;
+      }
+
+      #exam-container,
+      #result-container {
+        display: none;
+      }
+
+      input[type="text"] {
+        padding: 10px;
+        margin: 10px 0;
+        width: calc(100% - 22px);
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+
+      button {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin: 10px;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+
+      #options label {
+        display: block;
+        margin: 10px 0;
+        text-align: left;
+      }
+
+      #timer {
+        font-weight: bold;
+        color: #d9534f;
+      }
+
+      #question {
+        margin-bottom: 20px;
+      }
+
+      .button-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="start-container">
+      <h2>Enter Your Name to Start Exam</h2>
+      <input type="text" id="studentName" placeholder="Your Name" />
+      <button onclick="startExam()">Start Exam</button>
+    </div>
+
+    <div id="exam-container">
+      <h2 id="question"></h2>
+      <div id="options"></div>
+      <div class="button-container">
+        <button id="prevBtn" onclick="prevQuestion()" disabled>Previous</button>
+        <button id="submitBtn" onclick="submitAnswer()">Submit</button>
+      </div>
+      <p>Time Remaining: <span id="timer">5:00</span></p>
+    </div>
+
+    <div id="result-container">
+      <h2>Exam Result</h2>
+      <p>Student Name: <span id="resultName"></span></p>
+      <p>Score: <span id="score"></span> / 5</p>
+    </div>
+
+    <script>
+      const questions = [
+        {
+          question:
+            "A shopkeeper sold an article for Rs. 840 after allowing a discount of 16\% on the marked price. What was the marked price of the article?",
+          options: ["Rs. 960", "Rs. 1000", "Rs. 1040", "Rs. 1120", "Rs. 1200"],
+          answer: "Rs. 1000",
+        },
+        {
+          question:
+            "A man sold two articles for Rs. 99 each. On one he gains 10\% and on the other he loses 10\%. What is his overall gain or loss percentage?",
+          options: [
+            "1\% gain",
+            "1\% loss",
+            "No gain, no loss",
+            "2\% gain",
+            "2\% loss",
+          ],
+          answer: "1\% loss",
+        },
+        {
+          question:
+            "By selling a chair for Rs. 572, a man gains 30\%. What was the cost price of the chair?",
+          options: ["Rs. 400", "Rs. 420", "Rs. 440", "Rs. 460", "Rs. 480"],
+          answer: "Rs. 440",
+        },
+        {
+          question:
+            "A trader marks his goods 40\% above the cost price and allows a discount of 20\%. What is his gain percentage?",
+          options: ["10\%", "12\%", "15\%", "18\%", "20\%"],
+          answer: "12\%",
+        },
+        {
+          question:
+            "A fruit seller buys oranges at 11 for Rs. 10 and sells them at 10 for Rs. 11. What is his gain percentage?",
+          options: ["19\%", "20\%", "21\%", "22\%", "23\%"],
+          answer: "21\%",
+        },
+      ];
+
+      let currentQuestion = 0;
+      let score = 0;
+      let timeLeft = 300;
+      let timerInterval;
+      let answers = [];
+
+      function startExam() {
+        const studentName = document.getElementById("studentName").value;
+        if (!studentName) {
+          alert("Please enter your name.");
+          return;
+        }
+        localStorage.setItem("studentName", studentName);
+        document.getElementById("start-container").style.display = "none";
+        document.getElementById("exam-container").style.display = "block";
+        loadQuestion();
+        startTimer();
+      }
+
+      function loadQuestion() {
+        if (currentQuestion < questions.length) {
+          const questionData = questions[currentQuestion];
+          document.getElementById("question").textContent =
+            questionData.question;
+          let optionsHtml = "";
+          questionData.options.forEach((option) => {
+            optionsHtml += `<label><input type="radio" name="answer" value="${option}"> ${option}</label><br>`;
+          });
+          document.getElementById("options").innerHTML = optionsHtml;
+          if (answers[currentQuestion]) {
+            document.querySelector(
+              `input[name="answer"][value="${answers[currentQuestion]}"]`
+            ).checked = true;
+          }
+          document.getElementById("prevBtn").disabled = currentQuestion === 0;
+        } else {
+          showResult();
+        }
+      }
+
+      function submitAnswer() {
+        const selectedAnswer = document.querySelector(
+          'input[name="answer"]:checked'
+        );
+        if (selectedAnswer) {
+          answers[currentQuestion] = selectedAnswer.value;
+          if (selectedAnswer.value === questions[currentQuestion].answer) {
+            score++;
+          }
+          currentQuestion++;
+          loadQuestion();
+        } else {
+          alert("Please select an answer.");
+        }
+      }
+
+      function prevQuestion() {
+        currentQuestion--;
+        loadQuestion();
+      }
+
+      function startTimer() {
+        timerInterval = setInterval(() => {
+          timeLeft--;
+          const minutes = Math.floor(timeLeft / 60);
+          const seconds = timeLeft % 60;
+          document.getElementById("timer").textContent = `${minutes}:${
+            seconds < 10 ? "0" + seconds : seconds
+          }`;
+          if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            showResult();
+          }
+        }, 1000);
+      }
+
+      function showResult() {
+        clearInterval(timerInterval);
+        document.getElementById("exam-container").style.display = "none";
+        document.getElementById("result-container").style.display = "block";
+        document.getElementById("resultName").textContent =
+          localStorage.getItem("studentName");
+        document.getElementById("score").textContent = score;
+      }
+    </script>
+  </body>
+</html>
