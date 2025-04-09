@@ -36,7 +36,7 @@ const examData = {
   examId: "SBI_CLERK_2025_00100000",
   examSubject: "Quantitative Aptitude",
   examChapter: "Profit and Loss",
-  examStartTime: new Date("April 9, 2025 18:14:00"),
+  examStartTime: new Date("April 9, 2025 18:26:00"),
   examDuration: 1 * 60 * 1000, // 5 minutes in milliseconds
-  validUsers: ["bhagirath5676@", "hirva7776#", "roy56464@", "aa", "bb"],
+  validUsers: ["bhagirath5676@", "hirva7776#", "rrr", "aa", "bb"],
 };
