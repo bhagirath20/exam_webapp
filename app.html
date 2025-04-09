@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Profit and Loss Exam</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+      }
+
+      #start-container,
+      #exam-container,
+      #result-container {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 80%;
+        max-width: 600px;
+        text-align: center;
+      }
+
+      #exam-container,
+      #result-container {
+        display: none;
+      }
+
+      input[type="text"] {
+        padding: 10px;
+        margin: 10px 0;
+        width: calc(100% - 22px);
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+
+      button {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin: 10px;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+
+      #options label {
+        display: block;
+        margin: 10px 0;
+        text-align: left;
+      }
+
+      #timer {
+        font-weight: bold;
+        color: #d9534f;
+      }
+
+      #question {
+        margin-bottom: 20px;
+      }
+
+      .button-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="start-container">
+      <h2>Exam Information</h2>
+      <p>Exam ID: <span id="examId"></span></p>
+      <p>Exam Subject: <span id="examSubject"></span></p>
+      <p>Exam Chapter: <span id="examChapter"></span></p>
+      <p>Exam Start Time: <span id="examStartTimeDisplay"></span></p>
+      <p>Exam Duration: <span id="examDurationDisplay"></span></p>
+      <h2>Enter Your Username to Start Exam</h2>
+      <input type="text" id="username" placeholder="Your Username" />
+      <p id="startTime"></p>
+      <button id="startButton" disabled onclick="startExam()">
+        Start Exam
+      </button>
+    </div>
+
+    <div id="exam-container">
+      <h2 id="question"></h2>
+      <div id="options"></div>
+      <div class="button-container">
+        <button id="prevBtn" onclick="prevQuestion()" disabled>Previous</button>
+        <button id="submitBtn" onclick="submitAnswer()">Submit</button>
+      </div>
+      <p>Time Remaining: <span id="timer"></span></p>
+    </div>
+
+    <div id="result-container">
+      <h2>Exam Result</h2>
+      <p>Username: <span id="resultName"></span></p>
+      <p>Score: <span id="score"></span> / 5</p>
+    </div>
+
+    <script src="examData.js"></script>
+    <script src="examLogic.js"></script>
+  </body>
+</html>

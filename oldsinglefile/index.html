@@ -158,12 +158,19 @@
       let answers = [];
       let username;
 
-      const examId = "SBI_CLERK_2025_001";
+      const examId = "SBI_CLERK_2025_003";
       const examSubject = "Quantitative Aptitude";
       const examChapter = "Profit and Loss";
-      const examStartTime = new Date("April 9, 2025 15:34:00");
-      const examDuration = 5 * 60 * 1000; // 5 minutes in milliseconds
+      const examStartTime = new Date("April 9, 2025 16:10:00");
+      const examDuration = 1 * 60 * 1000; // 5 minutes in milliseconds
       const examEndTime = new Date(examStartTime.getTime() + examDuration);
+      const validUsers = [
+        "bhagirath5676@",
+        "hirva7776#",
+        "roy56464@",
+        "dfds",
+        "fsfd",
+      ];
 
       document.getElementById("examId").textContent = examId;
       document.getElementById("examSubject").textContent = examSubject;
@@ -210,26 +217,22 @@
 
       function startExam() {
         username = document.getElementById("username").value;
-        if (
-          !username ||
-          ![
-            "bhagirath5676@",
-            "hirva7776#",
-            "roy56464@",
-            "dfds",
-            "fsfd",
-            "aa",
-            "bb",
-            "cc",
-          ].includes(username)
-        ) {
+
+        if (!username || !validUsers.includes(username)) {
           alert("Please enter a valid username.");
           return;
         }
-        if (localStorage.getItem(username)) {
-          alert(
-            "You have already taken this exam. You can only take the exam once."
-          );
+
+        const examKey = `${username}_${examId}`;
+
+        if (localStorage.getItem(examKey)) {
+          alert("You have already taken this exam.");
+          return;
+        }
+
+        const now = new Date();
+        if (now > examEndTime) {
+          alert("Exam has ended.");
           return;
         }
 
@@ -310,7 +313,8 @@
         document.getElementById("result-container").style.display = "block";
         document.getElementById("resultName").textContent = username;
         document.getElementById("score").textContent = score;
-        localStorage.setItem(username, JSON.stringify(answers));
+        const examKey = `${username}_${examId}`;
+        localStorage.setItem(examKey, JSON.stringify(answers));
         document.exitFullscreen();
       }
 
