@@ -77,8 +77,8 @@
   </head>
   <body>
     <div id="start-container">
-      <h2>Enter Your Name to Start Exam</h2>
-      <input type="text" id="studentName" placeholder="Your Name" />
+      <h2>Enter Your Username to Start Exam</h2>
+      <input type="text" id="username" placeholder="Your Username" />
       <button onclick="startExam()">Start Exam</button>
     </div>
 
@@ -94,7 +94,7 @@
 
     <div id="result-container">
       <h2>Exam Result</h2>
-      <p>Student Name: <span id="resultName"></span></p>
+      <p>Username: <span id="resultName"></span></p>
       <p>Score: <span id="score"></span> / 5</p>
     </div>
 
@@ -143,14 +143,23 @@
       let timeLeft = 300;
       let timerInterval;
       let answers = [];
+      let username;
 
       function startExam() {
-        const studentName = document.getElementById("studentName").value;
-        if (!studentName) {
-          alert("Please enter your name.");
+        username = document.getElementById("username").value;
+        if (
+          !username ||
+          !["bhagirath5676@", "hirva7776#", "roy56464@"].includes(username)
+        ) {
+          alert("Please enter a valid username.");
           return;
         }
-        localStorage.setItem("studentName", studentName);
+        if (localStorage.getItem(username)) {
+          alert(
+            "You have already taken this exam. You can only take the exam once."
+          );
+          return;
+        }
         document.getElementById("start-container").style.display = "none";
         document.getElementById("exam-container").style.display = "block";
         loadQuestion();
@@ -184,14 +193,18 @@
         );
         if (selectedAnswer) {
           answers[currentQuestion] = selectedAnswer.value;
-          if (selectedAnswer.value === questions[currentQuestion].answer) {
-            score++;
-          }
-          currentQuestion++;
-          loadQuestion();
         } else {
-          alert("Please select an answer.");
+          answers[currentQuestion] = null;
         }
+
+        if (
+          selectedAnswer &&
+          selectedAnswer.value === questions[currentQuestion].answer
+        ) {
+          score++;
+        }
+        currentQuestion++;
+        loadQuestion();
       }
 
       function prevQuestion() {
@@ -218,9 +231,9 @@
         clearInterval(timerInterval);
         document.getElementById("exam-container").style.display = "none";
         document.getElementById("result-container").style.display = "block";
-        document.getElementById("resultName").textContent =
-          localStorage.getItem("studentName");
+        document.getElementById("resultName").textContent = username;
         document.getElementById("score").textContent = score;
+        localStorage.setItem(username, JSON.stringify(answers));
       }
     </script>
   </body>
