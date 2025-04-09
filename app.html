@@ -9,9 +9,8 @@
 
     <style>
       body {
-        font-family: "Roboto", sans-serif;
-
-        background-color: #f0f8ff; /* Light blue background */
+        font-family: "Arial", sans-serif;
+        background-color: #f4f4f4;
         margin: 0;
         padding: 0;
         display: flex;
@@ -22,71 +21,17 @@
         -webkit-user-select: none;
         -moz-user-select: none;
         -ms-user-select: none;
-        color: #333; /* Default text color */
-        line-height: 1.6; /* Improved line spacing for readability */
-      }
-
-      /* Optional: If you want to customize scrollbar (for modern browsers) */
-      ::-webkit-scrollbar {
-        width: 10px;
-      }
-
-      ::-webkit-scrollbar-track {
-        background: #f1f1f1;
-      }
-
-      ::-webkit-scrollbar-thumb {
-        background: #888;
-        border-radius: 5px;
-      }
-
-      ::-webkit-scrollbar-thumb:hover {
-        background: #555;
-      }
-
-      input[type="text"] {
-        padding: 12px 15px; /* Increased padding */
-        margin: 10px 0;
-        width: calc(100% - 30px); /* Adjusted width */
-        border: 2px solid #007bff; /* Blue border */
-        border-radius: 8px; /* Rounded corners */
-        font-size: 16px; /* Increased font size */
-        transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-      }
-
-      input[type="text"]:focus {
-        border-color: #0056b3; /* Darker blue on focus */
-        outline: none;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Increased shadow on focus */
-      }
-
-      #options label {
-        display: block;
-        margin: 15px 0;
-        text-align: left;
-        font-size: 16px;
-        padding: 10px; /* Padding for labels */
-        border-bottom: 1px solid #eee; /* Light border between options */
-      }
-
-      #options label:last-child {
-        border-bottom: none; /* Remove border from the last label */
-      }
-
-      #options input[type="radio"] {
-        margin-right: 10px; /* Space between radio button and label */
       }
 
       #start-container,
       #exam-container,
       #result-container {
-        background-color: #ffffff;
-        padding: 30px; /* Increased padding */
-        border-radius: 12px; /* Rounded corners */
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Deeper shadow */
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         width: 80%;
-        max-width: 700px; /* Increased max width */
+        max-width: 600px;
         text-align: center;
       }
 
@@ -96,66 +41,46 @@
       }
 
       input[type="text"] {
-        padding: 12px;
-        margin: 15px 0;
-        width: calc(100% - 24px);
+        padding: 10px;
+        margin: 10px 0;
+        width: calc(100% - 22px);
         border: 1px solid #ddd;
-        border-radius: 6px;
-        font-size: 16px;
+        border-radius: 4px;
       }
 
       button {
-        background-color: #4caf50; /* Green button */
+        background-color: #007bff;
         color: white;
-        padding: 12px 25px;
+        padding: 10px 20px;
         border: none;
-        border-radius: 6px;
+        border-radius: 4px;
         cursor: pointer;
         margin: 10px;
-        font-size: 16px;
-        transition: background-color 0.3s ease; /* Smooth transition */
       }
 
       button:hover {
-        background-color: #45a049; /* Darker green on hover */
+        background-color: #0056b3;
       }
 
       #options label {
         display: block;
-        margin: 15px 0;
+        margin: 10px 0;
         text-align: left;
-        font-size: 16px;
       }
 
       #timer {
         font-weight: bold;
         color: #d9534f;
-        font-size: 18px;
       }
 
       #question {
-        margin-bottom: 25px;
-        font-size: 18px;
-        line-height: 1.6;
+        margin-bottom: 20px;
       }
 
       .button-container {
         display: flex;
         justify-content: space-between;
-        margin-top: 25px;
-      }
-
-      h2 {
-        color: #333;
-        margin-bottom: 20px;
-        border-bottom: 2px solid #eee;
-        padding-bottom: 10px;
-      }
-
-      p {
-        font-size: 16px;
-        color: #555;
-        line-height: 1.6;
+        margin-top: 20px;
       }
     </style>
   </head>

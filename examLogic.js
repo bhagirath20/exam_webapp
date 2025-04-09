@@ -120,6 +120,13 @@ function loadQuestion() {
       ).checked = true;
     }
     document.getElementById("prevBtn").disabled = currentQuestion === 0;
+
+    // Change button text based on question number
+    if (currentQuestion === questions.length - 1) {
+      document.getElementById("submitBtn").textContent = "Submit Exam";
+    } else {
+      document.getElementById("submitBtn").textContent = "Save and Next";
+    }
   } else {
     showResult();
   }
@@ -168,8 +175,14 @@ function submitAnswer() {
       score = 0;
     }
   }
-  currentQuestion++;
-  loadQuestion();
+  if (currentQuestion === questions.length - 1) {
+    // Last question, so submit the exam
+    showResult();
+  } else {
+    // Not the last question, so go to the next question
+    currentQuestion++;
+    loadQuestion();
+  }
 }
 
 // function showResult() {
