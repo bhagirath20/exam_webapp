@@ -3,6 +3,8 @@ const examData = {
     {
       question:
         "A shopkeeper sold an article for Rs. 840 after allowing a discount of 16% on the marked price. What was the marked price of the article?",
+      image: "1.PNG", // Add the image path here
+
       options: ["Rs. 960", "Rs. 1000", "Rs. 1040", "Rs. 1120", "Rs. 1200"],
       answer: "Rs. 1000",
     },
@@ -31,10 +33,10 @@ const examData = {
       answer: "21%",
     },
   ],
-  examId: "SBI_CLERK_2025_00100",
+  examId: "SBI_CLERK_2025_00100000",
   examSubject: "Quantitative Aptitude",
   examChapter: "Profit and Loss",
-  examStartTime: new Date("April 9, 2025 16:34:00"),
+  examStartTime: new Date("April 9, 2025 18:14:00"),
   examDuration: 1 * 60 * 1000, // 5 minutes in milliseconds
   validUsers: ["bhagirath5676@", "hirva7776#", "roy56464@", "aa", "bb"],
 };

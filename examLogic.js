@@ -100,6 +100,15 @@ function loadQuestion() {
   if (currentQuestion < questions.length) {
     const questionData = questions[currentQuestion];
     document.getElementById("question").textContent = questionData.question;
+
+    let questionHtml = questionData.question;
+
+    if (questionData.image) {
+      questionHtml += `<br><img src="${questionData.image}" alt="Question Image" style="width: 100%; max-height: 500px; object-fit: contain;">`; // Added responsive styling
+    }
+
+    document.getElementById("question").innerHTML = questionHtml;
+
     let optionsHtml = "";
     questionData.options.forEach((option) => {
       optionsHtml += `<label><input type="radio" name="answer" value="${option}"> ${option}</label><br>`;
@@ -116,6 +125,28 @@ function loadQuestion() {
   }
 }
 
+// function loadQuestion() {
+//   if (currentQuestion < questions.length) {
+//     const questionData = questions[currentQuestion];
+//     document.getElementById("question").textContent = questionData.question;
+//     let optionsHtml = "";
+//     questionData.options.forEach((option) => {
+//       optionsHtml += `<label><input type="radio" name="answer" value="${option}"> ${option}</label><br>`;
+//     });
+//     document.getElementById("options").innerHTML = optionsHtml;
+//     if (answers[currentQuestion]) {
+//       document.querySelector(
+//         `input[name="answer"][value="${answers[currentQuestion]}"]`
+//       ).checked = true;
+//     }
+//     document.getElementById("prevBtn").disabled = currentQuestion === 0;
+//   } else {
+//     showResult();
+//   }
+// }
+
+const negativeMarking = 0.25; // Define negative marking (e.g., 0.25 for 1/4th negative marking)
+
 function submitAnswer() {
   const selectedAnswer = document.querySelector('input[name="answer"]:checked');
   if (selectedAnswer) {
@@ -129,9 +160,103 @@ function submitAnswer() {
     selectedAnswer.value === questions[currentQuestion].answer
   ) {
     score++;
+  } else if (selectedAnswer) {
+    // Only apply negative marking if an answer was selected
+    score -= negativeMarking;
+    if (score < 0) {
+      // Ensure score doesn't go below zero
+      score = 0;
+    }
   }
   currentQuestion++;
   loadQuestion();
+}
+
+// function showResult() {
+//   clearInterval(timerInterval);
+//   document.getElementById("exam-container").style.display = "none";
+//   document.getElementById("result-container").style.display = "block";
+//   document.getElementById("resultName").textContent = username;
+//   document.getElementById("score").textContent = score.toFixed(2); // Display score with 2 decimal places
+//   const examKey = `${username}_${examId}`;
+//   localStorage.setItem(examKey, JSON.stringify(answers));
+//   document.exitFullscreen();
+// }
+
+function showResult() {
+  clearInterval(timerInterval);
+  document.getElementById("exam-container").style.display = "none";
+  document.getElementById("result-container").style.display = "block";
+  document.getElementById("resultName").textContent = username;
+  document.getElementById("score").textContent = score.toFixed(2);
+
+  let correctAnswers = 0;
+  let wrongAnswers = 0;
+  let totalMarks = questions.length;
+  let gotMarks = 0; // Initialize gotMarks to 0
+
+  for (let i = 0; i < questions.length; i++) {
+    if (answers[i] === questions[i].answer) {
+      correctAnswers++;
+      gotMarks++; // Increment gotMarks for each correct answer
+    } else if (answers[i]) {
+      wrongAnswers++;
+      gotMarks -= 0.25; // Decrement gotMarks by 0.25 for each wrong answer
+    }
+  }
+
+  // Ensure gotMarks doesn't go below 0
+  gotMarks = Math.max(0, gotMarks);
+
+  document.getElementById("score").textContent = gotMarks.toFixed(2); // Display gotMarks
+
+  let resultHtml = `
+        <h2>Exam Result</h2>
+        <p>Username: ${username}</p>
+        <p>Correct Answers: ${correctAnswers}</p>
+        <p>Wrong Answers: ${wrongAnswers}</p>
+        <p>Total Marks: ${totalMarks}</p>
+        <p>Got Marks: ${gotMarks.toFixed(2)}</p>
+        <h3>Exam Information</h3>
+        <p>Exam ID: ${examId}</p>
+        <p>Exam Subject: ${examSubject}</p>
+        <p>Exam Chapter: ${examChapter}</p>
+        <p>Exam Start Time: ${examStartTime.toLocaleString()}</p>
+        <p>Exam Duration: ${examDuration / 60000} minutes</p>
+        <h3>Detailed Answers:</h3>
+    `;
+
+  for (let i = 0; i < questions.length; i++) {
+    resultHtml += `
+            <p><strong>Question ${i + 1}:</strong> ${questions[i].question}</p>
+        `;
+    if (questions[i].image) {
+      resultHtml += `<img src="${questions[i].image}" alt="Question Image" style="width: 100%; max-height: 200px; object-fit: contain;">`;
+    }
+
+    for (let option of questions[i].options) {
+      let checked = answers[i] === option ? "checked" : "";
+      let correct =
+        questions[i].answer === option ? "style='color: green;'" : "";
+      let wrong =
+        answers[i] === option && answers[i] !== questions[i].answer
+          ? "style='color: red;'"
+          : "";
+
+      resultHtml += `
+                <p><input type="radio" ${checked} disabled ${correct} ${wrong}> ${option} ${
+        correct ? "(Correct)" : ""
+      } ${wrong ? "(Your Answer)" : ""}</p>
+            `;
+    }
+    resultHtml += `<p>Correct Answer: ${questions[i].answer}</p><hr>`;
+  }
+
+  document.getElementById("result-container").innerHTML = resultHtml;
+
+  const examKey = `${username}_${examId}`;
+  localStorage.setItem(examKey, JSON.stringify(answers));
+  document.exitFullscreen();
 }
 
 function prevQuestion() {
@@ -173,16 +298,16 @@ function startTimer() {
   }, 1000);
 }
 
-function showResult() {
-  clearInterval(timerInterval);
-  document.getElementById("exam-container").style.display = "none";
-  document.getElementById("result-container").style.display = "block";
-  document.getElementById("resultName").textContent = username;
-  document.getElementById("score").textContent = score;
-  const examKey = `${username}_${examId}`;
-  localStorage.setItem(examKey, JSON.stringify(answers));
-  document.exitFullscreen();
-}
+// function showResult() {
+//   clearInterval(timerInterval);
+//   document.getElementById("exam-container").style.display = "none";
+//   document.getElementById("result-container").style.display = "block";
+//   document.getElementById("resultName").textContent = username;
+//   document.getElementById("score").textContent = score;
+//   const examKey = `${username}_${examId}`;
+//   localStorage.setItem(examKey, JSON.stringify(answers));
+//   document.exitFullscreen();
+// }
 
 document.addEventListener("visibilitychange", () => {
   if (document.visibilityState === "hidden") {
