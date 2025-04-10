@@ -92,12 +92,63 @@ function startExam() {
 
   document.getElementById("start-container").style.display = "none";
   document.getElementById("exam-container").style.display = "block";
+  document.getElementById("palette").style.display = "block"; // Show palette
+
   loadQuestion();
   startTimer();
+  // Call initializePalette when the exam starts
+  initializePalette(); // Call initializePalette when the exam starts
 }
+
+let questionStates = []; // Array to track question states (visited, attempted, marked)
+
+function initializePalette() {
+  if (paletteInitialized) return; // Prevent multiple initializations
+
+  const paletteButtons = document.getElementById("paletteButtons");
+  for (let i = 0; i < questions.length; i++) {
+    const button = document.createElement("button");
+    button.textContent = i + 1;
+    button.addEventListener("click", () => {
+      currentQuestion = i;
+      loadQuestion();
+    });
+    paletteButtons.appendChild(button);
+    questionStates.push({}); // Initialize state for each question
+  }
+  updatePalette();
+  paletteInitialized = true;
+}
+function updatePalette() {
+  const paletteButtons = document.getElementById("paletteButtons").children;
+  for (let i = 0; i < questions.length; i++) {
+    const button = paletteButtons[i];
+    button.className = ""; // Reset classes
+
+    if (questionStates[i].visited) {
+      if (questionStates[i].attempted) {
+        button.classList.add("attempted"); // Visited and answered
+      } else {
+        button.classList.add("visited"); // Visited but no answer
+      }
+    }
+
+    if (questionStates[i].marked) {
+      button.classList.add("marked"); // Visited and marked for review
+    }
+  }
+}
+
+let paletteInitialized = false; // Flag to track if palette is initialized
 
 function loadQuestion() {
   if (currentQuestion < questions.length) {
+    if (!paletteInitialized) {
+      // Initialize palette only once
+      initializePalette();
+      paletteInitialized = true;
+    }
+
     const questionData = questions[currentQuestion];
     document.getElementById("question").textContent = questionData.question;
 
@@ -127,6 +178,21 @@ function loadQuestion() {
     } else {
       document.getElementById("submitBtn").textContent = "Save and Next";
     }
+
+    if (currentQuestion === questions.length - 1) {
+      document.getElementById("submitBtn").textContent = "Submit Exam";
+    } else {
+      document.getElementById("submitBtn").textContent = "Save and Next";
+    }
+
+    if (currentQuestion === questions.length - 1) {
+      document.getElementById("submitBtn").textContent = "Submit Exam";
+    } else {
+      document.getElementById("submitBtn").textContent = "Save and Next";
+    }
+
+    questionStates[currentQuestion].visited = true; // Mark question as visited
+    updatePalette();
   } else {
     showResult();
   }
@@ -175,16 +241,22 @@ function submitAnswer() {
       score = 0;
     }
   }
+  questionStates[currentQuestion].attempted = true;
+  updatePalette();
+
   if (currentQuestion === questions.length - 1) {
-    // Last question, so submit the exam
     showResult();
   } else {
-    // Not the last question, so go to the next question
     currentQuestion++;
     loadQuestion();
   }
 }
 
+function markForReview() {
+  questionStates[currentQuestion].marked =
+    !questionStates[currentQuestion].marked;
+  updatePalette();
+}
 // function showResult() {
 //   clearInterval(timerInterval);
 //   document.getElementById("exam-container").style.display = "none";
@@ -202,6 +274,8 @@ function showResult() {
   document.getElementById("result-container").style.display = "block";
   document.getElementById("resultName").textContent = username;
   document.getElementById("score").textContent = score.toFixed(2);
+
+  document.getElementById("palette").style.display = "none"; // Hide palette
 
   let correctAnswers = 0;
   let wrongAnswers = 0;
