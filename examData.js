@@ -33,10 +33,10 @@ const examData = {
       answer: "21%",
     },
   ],
-  examId: "SBI_CLERK_2025_003",
+  examId: "SBI_CLERK_2025_004",
   examSubject: "Quantitative Aptitude",
   examChapter: "Profit and Loss",
-  examStartTime: new Date("April 9, 2025 19:49:00"),
-  examDuration: 100 * 60 * 1000, // 5 minutes in milliseconds
-  validUsers: ["bbb", "ff", "ran", "zaa", "av"],
+  examStartTime: new Date("April 10, 2025 19:49:00"),
+  examDuration: 100000 * 60 * 1000, // 5 minutes in milliseconds
+  validUsers: ["bbb", "ff", "ran", "zaa", "av","a","b","aa"],
 };
